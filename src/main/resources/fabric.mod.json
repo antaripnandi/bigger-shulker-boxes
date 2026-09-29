@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "biggershulkerboxes",
+  "version": "${version}",
+  "name": "Bigger Shulker Boxes",
+  "description": "Expands vanilla Shulker Box container storage from 27 to 54 slots (double chest capacity).",
+  "authors": [
+    "Antarip Nandi"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/bigger-shulker-boxes",
+    "sources": "https://github.com/antaripnandi/bigger-shulker-boxes",
+    "issues": "https://github.com/antaripnandi/bigger-shulker-boxes/issues"
+  },
+  "license": "MIT",
+  "icon": "assets/biggershulkerboxes/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.antarip.biggershulkerboxes.BiggerShulkerBoxesMod"
+    ]
+  },
+  "mixins": [
+    "biggershulkerboxes.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "${minecraft_version}"
+  }
+}
