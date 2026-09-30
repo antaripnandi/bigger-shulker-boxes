@@ -11,7 +11,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.ValueInput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -30,19 +29,30 @@ public abstract class ShulkerBoxBlockEntityMixin {
     @Unique
     private static final int[] SLOTS_54 = IntStream.range(0, 54).toArray();
 
-    @Inject(method = "<init>(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V", at = @At("TAIL"))
+    @Inject(method = "<init>(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V", at = @At("TAIL"), require = 0)
     private void biggershulkerboxes$initPosState(BlockPos pos, BlockState state, CallbackInfo ci) {
         biggershulkerboxes$ensureSize();
     }
 
-    @Inject(method = "<init>(Lnet/minecraft/world/item/DyeColor;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V", at = @At("TAIL"))
+    @Inject(method = "<init>(Lnet/minecraft/world/item/DyeColor;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)V", at = @At("TAIL"), require = 0)
     private void biggershulkerboxes$initColorPosState(DyeColor color, BlockPos pos, BlockState state, CallbackInfo ci) {
         biggershulkerboxes$ensureSize();
     }
 
-    @Inject(method = "loadAdditional", at = @At("TAIL"))
-    private void biggershulkerboxes$loadAdditional(ValueInput input, CallbackInfo ci) {
+    @Inject(method = "getItems", at = @At("HEAD"), require = 0)
+    private void biggershulkerboxes$onGetItems(CallbackInfoReturnable<NonNullList<ItemStack>> cir) {
         biggershulkerboxes$ensureSize();
+    }
+
+    @Inject(method = "setItems", at = @At("HEAD"), require = 0)
+    private void biggershulkerboxes$onSetItems(NonNullList<ItemStack> list, CallbackInfo ci) {
+        if (list != null && list.size() < 54) {
+            NonNullList<ItemStack> expanded = NonNullList.withSize(54, ItemStack.EMPTY);
+            for (int i = 0; i < list.size(); i++) {
+                expanded.set(i, list.get(i));
+            }
+            this.itemStacks = expanded;
+        }
     }
 
     @Inject(method = "getContainerSize", at = @At("HEAD"), cancellable = true)
