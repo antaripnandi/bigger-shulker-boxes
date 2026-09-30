@@ -44,15 +44,9 @@ public abstract class ShulkerBoxBlockEntityMixin {
         biggershulkerboxes$ensureSize();
     }
 
-    @Inject(method = "setItems", at = @At("HEAD"), require = 0)
+    @Inject(method = "setItems", at = @At("TAIL"), require = 0)
     private void biggershulkerboxes$onSetItems(NonNullList<ItemStack> list, CallbackInfo ci) {
-        if (list != null && list.size() < 54) {
-            NonNullList<ItemStack> expanded = NonNullList.withSize(54, ItemStack.EMPTY);
-            for (int i = 0; i < list.size(); i++) {
-                expanded.set(i, list.get(i));
-            }
-            this.itemStacks = expanded;
-        }
+        biggershulkerboxes$ensureSize();
     }
 
     @Inject(method = "getContainerSize", at = @At("HEAD"), cancellable = true)
